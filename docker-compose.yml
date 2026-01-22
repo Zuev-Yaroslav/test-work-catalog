@@ -1,0 +1,35 @@
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./:/var/www/
+      - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - app
+    container_name: catalog_nginx
+  app:
+    image: php-nodejs
+    build:
+      context: .
+      dockerfile: _docker/app/Dockerfile
+    volumes:
+      - ./:/var/www/
+    container_name: catalog_app
+    depends_on:
+      - db
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+        - ./tmp/db:/var/lib/postgresql/18/docker
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    container_name: catalog_db
