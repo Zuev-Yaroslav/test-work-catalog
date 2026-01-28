@@ -34,15 +34,17 @@
         "moduleResolution": "bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
         // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
         "paths": {
+            "ziggy-js": ["./vendor/tightenco/ziggy"],
             /* Specify a set of entries that re-map imports to additional lookup locations. */ "@/*": ["./resources/js/*"],
         },
-        // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
+        // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving utils. */
         // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
         "types": [
             "vite/client",
-            "./resources/js/types"
+            "./resources/js/types",
+            "ziggy-js"
         ] /* Specify type package names to be included without being referenced in a source file. */,
-        // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
+        // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from utils. */
         // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
         // "allowImportingTsExtensions": true,               /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */
         // "rewriteRelativeImportExtensions": true,          /* Rewrite '.ts', '.tsx', '.mts', and '.cts' file extensions in relative import paths to their JavaScript equivalent in output files. */
@@ -87,7 +89,7 @@
         // "verbatimModuleSyntax": true,                     /* Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting. */
         // "isolatedDeclarations": true,                     /* Require sufficient annotation on exports so other tools can trivially generate declaration files. */
         // "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
-        "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+        "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS utils. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
         // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
         "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
 
@@ -120,7 +122,7 @@
     "include": [
         "resources/js/**/*.ts",
         "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx", 
-        "resources/js/**/*.vue"
+        "resources/js/**/*.tsx",
+        "resources/js/**/*.vue",
     ]
 }

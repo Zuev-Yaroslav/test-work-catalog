@@ -3,11 +3,17 @@ import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig, loadEnv } from 'vite';
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd());
 
     return {
+        resolve: {
+            alias: {
+                'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
+            },
+        },
         plugins: [
             laravel({
                 input: ['resources/js/app.ts'],
