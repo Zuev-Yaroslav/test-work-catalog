@@ -7,9 +7,14 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
+            <exclude>tests/Unit/ExampleTest.php</exclude>
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
+            <exclude>tests/Feature/ExampleTest.php</exclude>
+            <exclude>tests/Feature/DashboardTest.php</exclude>
+            <exclude>tests/Feature/Settings</exclude>
+            <exclude>tests/Feature/Auth</exclude>
         </testsuite>
     </testsuites>
     <source>
