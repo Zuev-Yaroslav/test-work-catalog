@@ -31,5 +31,5 @@ services:
     volumes:
         - ./tmp/db:/var/lib/postgresql/18/docker
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - "5434:5432"
     container_name: catalog_db
