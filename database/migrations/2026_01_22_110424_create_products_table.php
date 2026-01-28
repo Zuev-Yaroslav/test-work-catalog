@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->decimal('price');
+            $table->integer('price');
             $table->foreignId('category_id')->index()->constrained('categories');
             $table->softDeletes();
             $table->timestamps();
