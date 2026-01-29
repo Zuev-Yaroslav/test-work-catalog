@@ -1,17 +1,16 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [MainController::class, 'index'])
+    ->name('main');
+Route::get('/products/{id}', [ProductController::class, 'show'])
+    ->name('products.show');
+Route::get('/auth/login', [AuthController::class, 'login'])
+    ->name('auth.login');
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/admin.php';
