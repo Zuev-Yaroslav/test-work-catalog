@@ -21,6 +21,17 @@ services:
       - db
     ports:
       - "${VITE_PORT}:${VITE_PORT}"
+  supervisor:
+    image: php-nodejs
+    build:
+      context: .
+      dockerfile: _docker/app/Dockerfile
+    command: [ "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - app
+    container_name: catalog_supervisor
   db:
     image: postgres:18
     restart: always
@@ -31,5 +42,9 @@ services:
     volumes:
         - ./tmp/db:/var/lib/postgresql/18/docker
     ports:
-      - "5434:5432"
+      - "${DB_PORT}:${DB_PORT}"
+    command:
+      - "postgres"
+      - "-c"
+      - 'port=${DB_PORT}'
     container_name: catalog_db
