@@ -26,9 +26,9 @@ Route::prefix('products')->group(function () {
     Route::post('/', [ProductController::class, 'store'])
         ->middleware('auth:sanctum')
         ->name('api.v1.products.store');
-    Route::delete('trashed/{id}', [ProductController::class, 'forceDestroy'])
+    Route::delete('{id}/force-destroy', [ProductController::class, 'forceDestroy'])
         ->middleware('auth:sanctum')
-        ->name('api.v1.products.trashed.destroy');
+        ->name('api.v1.products.force-destroy');
     Route::get('/trashed', [ProductController::class, 'trashedIndex'])
         ->middleware('auth:sanctum')
         ->name('api.v1.products.trashed.index');
