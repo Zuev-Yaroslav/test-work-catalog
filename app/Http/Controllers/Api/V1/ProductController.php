@@ -20,7 +20,10 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        return ProductResource::collection(Product::filter($data)->latest()->paginate(self::PAGINATION_LIMIT));
+        return ProductResource::collection(Product::filter($data)
+            ->latest('created_at')
+            ->latest('id')
+            ->paginate(self::PAGINATION_LIMIT));
     }
 
     /**
@@ -67,7 +70,10 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        $products = Product::onlyTrashed()->filter($data)->latest()->paginate(self::PAGINATION_LIMIT);
+        $products = Product::onlyTrashed()->filter($data)
+            ->latest('created_at')
+            ->latest('id')
+            ->paginate(self::PAGINATION_LIMIT);
 
         return ProductResource::collection($products);
     }
