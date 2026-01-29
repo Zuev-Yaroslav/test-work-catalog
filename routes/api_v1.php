@@ -37,7 +37,7 @@ Route::prefix('products')->group(function () {
         ->name('api.v1.products.trashed.show.restore');
     Route::get('/{product}', [ProductController::class, 'show'])
         ->name('api.v1.products.show');
-    Route::patch('/{product}', [ProductController::class, 'update'])
+    Route::put('/{product}', [ProductController::class, 'update'])
         ->middleware('auth:sanctum')
         ->name('api.v1.products.update');
     Route::delete('/{product}', [ProductController::class, 'destroy'])
