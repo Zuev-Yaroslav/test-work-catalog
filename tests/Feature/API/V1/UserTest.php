@@ -1,0 +1,50 @@
+<?php
+
+namespace API\V1;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
+
+class UserTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_login_successfully()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->post(route('api.v1.auth.login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        $response->assertOk();
+        $responseMe = $this->withToken($response->collect()['token'])->get(route('api.v1.auth.me'));
+        $responseMe->assertOk();
+        $this->assertEquals($user->id, $responseMe->collect()['id']);
+    }
+    public function test_login_failed()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->post(route('api.v1.auth.login'), [
+            'email' => $user->email,
+            'password' => 'pass',
+        ]);
+
+        $response->assertUnauthorized();
+    }
+    public function test_invalid_validation()
+    {
+        User::factory()->create();
+
+        $response = $this->post(route('api.v1.auth.login'), [
+            'email' => 'kkdioad',
+            'password' => '',
+        ], [
+            'Accept' => 'application/json'
+        ]);
+        $response->assertUnprocessable();
+    }
+}
