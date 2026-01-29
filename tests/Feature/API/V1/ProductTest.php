@@ -12,6 +12,9 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
+    const HEADERS = [
+        'Accept' => 'application/json'
+    ];
 
     public function test_store_and_update_product_successfully()
     {
@@ -40,7 +43,7 @@ class ProductTest extends TestCase
 
         $response = $this->withToken($user->createToken('token')
             ->plainTextToken)
-            ->patch(route('api.v1.products.update', $product->id), ['name' => $data['name']]);
+            ->put(route('api.v1.products.update', $product->id), $data);
         $product->refresh();
         $response->assertOk();
 
@@ -61,12 +64,69 @@ class ProductTest extends TestCase
             "price" => 102399934942395348753994239424325645,
             "category_id" => 6
         ];
-        $response = $this->withToken($user->createToken('token')
-            ->plainTextToken)
-            ->post(route('api.v1.products.store'), $data, [
-                'Accept' => 'application/json'
-            ]);
+        $response = $this
+            ->withToken($user->createToken('token')->plainTextToken)
+            ->post(route('api.v1.products.store'), $data, self::HEADERS);
 
         $response->assertUnprocessable();
+        $response->assertJsonValidationErrors(['price']);
+    }
+    public function test_store_update_destroy_force_destroy_without_token_product()
+    {
+        Category::factory(10)->create();
+        $product = Product::factory()->create();
+        $data = [
+            "name" => 'laboriosam',
+            "description" => "Sint assumenda ut fuga distinctio tenetur accusamus velit voluptas. Eveniet odio aut sed aut odio. Excepturi facilis expedita similique sequi commodi consectetur.",
+            "price" => 32436,
+            "category_id" => 7
+        ];
+        $response = $this
+            ->post(route('api.v1.products.store'), $data, self::HEADERS);
+        $response->assertUnauthorized();
+
+        $response = $this
+            ->put(route('api.v1.products.update', $product->id), $data, self::HEADERS);
+        $response->assertUnauthorized();
+
+        $response = $this
+            ->delete(route('api.v1.products.destroy', $product->id), [], self::HEADERS);
+        $response->assertUnauthorized();
+
+        $response = $this
+            ->delete(route('api.v1.products.force-destroy', $product->id), [], self::HEADERS);
+        $response->assertUnauthorized();
+    }
+    public function test_update_one_field_of_product()
+    {
+        $user = User::factory()->create();
+        Category::factory(10)->create();
+        $product = Product::factory()->create();
+
+        $fields = ['name', 'description', 'price', 'category_id'];
+        foreach ($fields as $field) {
+            $errorFields = $fields;
+            $index = array_search($field, $fields);
+            unset($errorFields[$index]);
+            $response = $this
+                ->withToken($user->createToken('token')->plainTextToken)
+                ->put(route('api.v1.products.update', $product->id), [$field => 'updated ' . $field], self::HEADERS);
+            $response->assertUnprocessable();
+
+            $response->assertJsonValidationErrors($errorFields);
+        }
+    }
+    public function test_delete_product()
+    {
+        $user = User::factory()->create();
+        Category::factory(10)->create();
+        $product = Product::factory()->create();
+
+        $response = $this
+            ->withToken($user->createToken('token')->plainTextToken)
+            ->delete(route('api.v1.products.destroy', $product->id), [], self::HEADERS);
+        $response->assertNoContent();
+        $product = Product::find($product->id);
+        $this->assertNull($product);
     }
 }

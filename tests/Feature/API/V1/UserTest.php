@@ -47,4 +47,42 @@ class UserTest extends TestCase
         ]);
         $response->assertUnprocessable();
     }
+    public function test_logout()
+    {
+        $user = User::factory()->create();
+        $response = $this
+            ->post(route('api.v1.auth.logout'), [], [
+                'Accept' => 'application/json'
+            ]);
+        $response->assertUnauthorized();
+
+        $token = $user->createToken('token')->plainTextToken;
+        $response = $this
+            ->withToken($token)
+            ->post(route('api.v1.auth.logout'), [], [
+                'Accept' => 'application/json'
+            ]);
+        $response->assertNoContent();
+
+    }
+    public function test_cannot_logout_twice_with_same_token()
+    {
+        $user = User::factory()->create();
+
+        $token = $user->createToken('token')->plainTextToken;
+        $response = $this
+            ->withToken($token)
+            ->post(route('api.v1.auth.logout'), [], [
+                'Accept' => 'application/json'
+            ]);
+        $response->assertNoContent();
+        app('auth')->guard('sanctum')->forgetUser();
+
+        $response = $this
+            ->withToken($token)
+            ->post(route('api.v1.auth.logout'), [], [
+                'Accept' => 'application/json'
+            ]);
+        $response->assertUnauthorized();
+    }
 }
