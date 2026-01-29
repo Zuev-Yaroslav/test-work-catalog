@@ -24,13 +24,19 @@ docker-compose up -d
 docker exec -it catalog_app bash
 ````
 ```` bash
-composer update
+composer update --no-scripts
 php artisan key:generate
 php artisan migrate --seed
+composer update
 npm i
+php artisan ziggy:generate
 npm run build
+chmod -R 777 ./
 ````
 
-- Можно потом запустить npm run dev
+- Перезапускаем докер контейнеры, чтобы у нас заработал supervisor. Для начала выйдем из контейнера, прописав ````exit````
+```` bash
+docker-compose up -d --force-recreate
+````
 
 Можно пользоваться
