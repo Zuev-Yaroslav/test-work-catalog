@@ -27,7 +27,10 @@ docker exec -it catalog_app bash
 composer update
 php artisan key:generate
 php artisan migrate --seed
+npm i
 npm run build
 ````
+
+- Можно потом запустить npm run dev
 
 Можно пользоваться
