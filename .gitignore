@@ -30,3 +30,5 @@ yarn-error.log
 /.zed
 /tmp
 auto-imports.d.ts
+supervisord.log
+supervisord.pid
