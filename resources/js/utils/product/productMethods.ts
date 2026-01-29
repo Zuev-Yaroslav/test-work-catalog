@@ -48,7 +48,7 @@ const forceDestroyProduct = (id: number) => {
 }
 const updateProduct = (product: Ref, errorValidation: Ref) => {
     errorValidation.value = [];
-    api.patch(route('api.v1.products.update', product.value.id), product.value)
+    api.put(route('api.v1.products.update', product.value.id), product.value)
         .then((response) => {
             product.value = response.data;
             router.visit(route('admin.products.index'));
