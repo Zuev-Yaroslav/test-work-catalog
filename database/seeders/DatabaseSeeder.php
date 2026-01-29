@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
     {
         Category::factory(20)->create();
         Product::factory(300)->create();
-        User::factory()->create();
+        User::firstOrCreate([
+            'email'=> env('USER_EMAIL')
+        ], [
+            'name' => env('USER_NAME'),
+            'password'=> Hash::make(env('USER_PASSWORD')),
+        ]);
     }
 }
