@@ -29,7 +29,7 @@ const destroyProduct = (id: number) => {
         });
 }
 const restoreProduct = (id: number) => {
-    api.post(route('api.v1.products.trashed.show.restore', id))
+    api.post(route('api.v1.products.restore', id))
         .then((response) => {
             router.reload( {
                 preserveState: true,

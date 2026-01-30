@@ -34,7 +34,7 @@ Route::prefix('products')->group(function () {
         ->name('api.v1.products.trashed.index');
     Route::post('{id}/restore', [ProductController::class, 'restore'])
         ->middleware('auth:sanctum')
-        ->name('api.v1.products.trashed.show.restore');
+        ->name('api.v1.products.restore');
     Route::get('/{product}', [ProductController::class, 'show'])
         ->name('api.v1.products.show');
     Route::put('/{product}', [ProductController::class, 'update'])
