@@ -4,7 +4,6 @@ import {computed, ref} from "vue";
 import { PencilSquareIcon, TrashIcon, XMarkIcon, ArrowUturnLeftIcon } from '@heroicons/vue/24/solid'
 import DefaultButton from "@/components/DefaultButton.vue";
 import Dialog from "primevue/dialog";
-import {restoreProduct} from "@/utils/product/productMethods";
 
 const props = defineProps({
     product: Object,
@@ -23,6 +22,7 @@ const showForceDestroyModal = ref(false);
 const emits = defineEmits([
     'destroyProduct',
     'forceDestroyProduct',
+    'restoreProduct',
 ])
 </script>
 
@@ -45,7 +45,7 @@ const emits = defineEmits([
                 v-if="product.is_trashed"
                 type="button"
                 v-tooltip.top="'Восстановить'"
-                @click="restoreProduct(product.id)"
+                @click="emits('restoreProduct')"
                 class="mb-4 text-green-500 hover:text-green-700 hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm text-center"
             >
                 <ArrowUturnLeftIcon class="w-[25px] h-[25px]"/>
@@ -78,7 +78,7 @@ const emits = defineEmits([
             <div class="flex justify-end gap-3">
                 <DefaultButton
                     type="button"
-                    @click="emits('destroyProduct', product.id); showDestroyModal = false"
+                    @click="emits('destroyProduct'); showDestroyModal = false"
                     class="text-white bg-red-600 hover:bg-red-700 focus:ring-red-300 mb-5"
                 >
                     Да
@@ -102,7 +102,7 @@ const emits = defineEmits([
             <div class="flex justify-end gap-3">
                 <DefaultButton
                     type="button"
-                    @click="emits('forceDestroyProduct', product.id); showForceDestroyModal = false"
+                    @click="emits('forceDestroyProduct'); showForceDestroyModal = false"
                     class="text-white bg-red-600 hover:bg-red-700 focus:ring-red-300 mb-5"
                 >
                     Да

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {getCurrentInstance, onMounted, onUnmounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import api from "@/axios/api";
 import PaginationComponent from "@/components/Pagination/PaginationComponent.vue";
-import {router, Link} from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
 import ProductItem from "@/components/Product/ProductItem.vue";
 import ProductFilterComponent from "@/components/Product/ProductFilterComponent.vue";
-import { getProducts, filter } from "@/utils/product/productMethods";
+import {filter, refreshProducts} from "@/utils/product/productMethods";
 import {getCategories} from "@/utils/product/categoryMethods";
 
 const products = ref([]);
@@ -18,15 +17,15 @@ const filterData = reactive({
 });
 
 onMounted(() => {
-    getProducts(products);
+    refreshProducts(products, filterData);
     getCategories(categories);
 })
-const removeFinishEventListener = router.on('finish', () => {
-    getProducts(products);
-})
-onUnmounted(() => {
-    removeFinishEventListener();
-})
+watch(() => usePage().url,
+    (newVal) => {
+        refreshProducts(products, filterData);
+    },
+    { flush: 'post' }
+);
 defineOptions({ layout: MainLayout });
 </script>
 

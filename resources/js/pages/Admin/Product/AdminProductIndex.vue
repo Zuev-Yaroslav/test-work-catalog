@@ -3,10 +3,15 @@
 import PaginationComponent from "@/components/Pagination/PaginationComponent.vue";
 import ProductFilterComponent from "@/components/Product/ProductFilterComponent.vue";
 import ProductItem from "@/components/Product/ProductItem.vue";
-import {getProducts, filter, destroyProduct, forceDestroyProduct} from "@/utils/product/productMethods";
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {
+    filter,
+    destroyProduct,
+    forceDestroyProduct,
+    refreshProducts
+} from "@/utils/product/productMethods";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import MainLayout from "@/layouts/MainLayout.vue";
-import {router} from "@inertiajs/vue3";
+import {usePage} from "@inertiajs/vue3";
 import {getCategories} from "@/utils/product/categoryMethods";
 import DefaultButton from "@/components/DefaultButton.vue";
 
@@ -18,21 +23,20 @@ const filterData = reactive({
     search: route().params.search || null,
     only_trashed: (route().params.only_trashed === 'true') || null
 });
-const handleDestroyProduct = (id) => destroyProduct(id);
-const handleForceDestroyProduct = (id) => forceDestroyProduct(id);
+const handleDestroyProduct = (id) => destroyProduct(id, products, filterData);
+const handleForceDestroyProduct = (id) => forceDestroyProduct(id, products, filterData);
+const handleRestoreProduct = (id) => forceDestroyProduct(id, products, filterData);
 
 onMounted(() => {
-    const routeName = (filterData.only_trashed) ? 'api.v1.products.trashed.index' : null;
-    getProducts(products, routeName);
+    refreshProducts(products, filterData);
     getCategories(categories);
 })
-const removeFinishEventListener = router.on('finish', () => {
-    const routeName = (filterData.only_trashed) ? 'api.v1.products.trashed.index' : null;
-    getProducts(products, routeName);
-})
-onUnmounted(() => {
-    removeFinishEventListener();
-})
+watch(() => usePage().url,
+    (newVal) => {
+        refreshProducts(products, filterData)
+    },
+    { flush: 'post' }
+);
 defineOptions({ layout: MainLayout });
 </script>
 
@@ -59,6 +63,7 @@ defineOptions({ layout: MainLayout });
                 :is-admin="true"
                 @destroy-product="handleDestroyProduct(product.id)"
                 @force-destroy-product="handleForceDestroyProduct(product.id)"
+                @restore-product="handleRestoreProduct(product.id)"
             />
         </div>
     </div>

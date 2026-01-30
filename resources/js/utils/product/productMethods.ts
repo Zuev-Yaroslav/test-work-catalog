@@ -3,6 +3,10 @@ import {router} from "@inertiajs/vue3";
 import {type Reactive, type Ref} from "vue";
 import {HttpStatus} from "http-status-ts";
 
+const refreshProducts = (products: Ref, filterData: Reactive<object>) => {
+    const routeName = filterData.only_trashed ? 'api.v1.products.trashed.index' : null;
+    getProducts(products, routeName);
+};
 const getProducts = (products: Ref, routeName?) => {
     routeName = routeName || 'api.v1.products.index'
     const params = route().params;
@@ -19,31 +23,22 @@ const getProduct = (product: Ref, id: number, errorObject) => {
             errorObject.value = error;
         });
 }
-const destroyProduct = (id: number) => {
+const destroyProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.delete(route('api.v1.products.destroy', id))
         .then((response) => {
-            router.reload( {
-                preserveState: true,
-                preserveScroll: true,
-            })
+            refreshProducts(products, filerData);
         });
 }
-const restoreProduct = (id: number) => {
+const restoreProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.post(route('api.v1.products.restore', id))
         .then((response) => {
-            router.reload( {
-                preserveState: true,
-                preserveScroll: true,
-            })
+            refreshProducts(products, filerData);
         });
 }
-const forceDestroyProduct = (id: number) => {
+const forceDestroyProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.delete(route('api.v1.products.force-destroy', id))
         .then((response) => {
-            router.reload( {
-                preserveState: true,
-                preserveScroll: true,
-            })
+            refreshProducts(products, filerData);
         });
 }
 const updateProduct = (product: Ref, errorValidation: Ref) => {
@@ -53,7 +48,7 @@ const updateProduct = (product: Ref, errorValidation: Ref) => {
             product.value = response.data;
             router.visit(route('admin.products.index'));
         })
-        .catch(error => {
+            .catch(error => {
             switch (error.status) {
                 case HttpStatus.UNPROCESSABLE_ENTITY:
                     errorValidation.value = error.response.data;
@@ -76,7 +71,7 @@ const storeProduct = (product: Reactive<object>, errorValidation: Ref) => {
             }
         })
 }
-const filterRequest = (filterData: object, url: URL) => {
+const filterRequest = (filterData: Reactive<object>, url: URL) => {
     Object.entries(filterData).forEach(([key, value]) => {
         if (value) {
             url.searchParams.set(key, value)
@@ -102,6 +97,7 @@ const filter = (filterData: object, event: Event) => {
 }
 
 export {
+    refreshProducts,
     getProducts,
     getProduct,
     forceDestroyProduct,
