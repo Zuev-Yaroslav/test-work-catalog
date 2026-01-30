@@ -29,9 +29,12 @@ const emits = defineEmits([
 <template>
     <div class="mb-4 border-b" :class="(isAdmin) ? 'flex justify-between' : 'block'">
         <div >
-            <Link v-if="isAdmin && !product.is_trashed" :href="route('admin.products.edit', product.id)" class="flex gap-2 text-2xl items-center text-blue-500">
-                <span>{{ product.name }}</span>
-                <PencilSquareIcon class="w-[15px] h-[15px]"></PencilSquareIcon>
+            <Link v-if="isAdmin && !product.is_trashed" :href="route('admin.products.edit', product.id)" class="text-2xl items-center text-blue-500">
+                <span>
+                    {{ product.name }}
+                    <PencilSquareIcon class="w-[15px] h-[15px] inline-block"></PencilSquareIcon>
+                </span>
+
             </Link>
             <span v-else-if="isAdmin && product.is_trashed" class="text-2xl">{{ product.name }}</span>
             <Link v-else :href="route('products.show', product.id)" class="text-2xl text-blue-500">{{ product.name }}</Link>
