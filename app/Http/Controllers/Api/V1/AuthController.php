@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\AuthException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LoginRequest;
-use App\Services\UserService;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +15,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
-        $token = UserService::login($credentials);
+        $token = AuthService::login($credentials);
 
         return response()->json([
             'token' => $token,
