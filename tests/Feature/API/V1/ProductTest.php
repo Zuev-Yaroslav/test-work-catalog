@@ -12,9 +12,6 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
-    const HEADERS = [
-        'Accept' => 'application/json'
-    ];
 
     public function test_store_and_update_product_successfully()
     {
@@ -29,7 +26,7 @@ class ProductTest extends TestCase
         $response = $this->withToken($user->createToken('token')
             ->plainTextToken)
             ->post(route('api.v1.products.store'), $data);
-        $response->assertOk();
+        $response->assertCreated();
         $product = Product::first();
 
         $this->assertEquals($data, [
@@ -66,12 +63,12 @@ class ProductTest extends TestCase
         ];
         $response = $this
             ->withToken($user->createToken('token')->plainTextToken)
-            ->post(route('api.v1.products.store'), $data, self::HEADERS);
+            ->post(route('api.v1.products.store'), $data);
 
         $response->assertUnprocessable();
         $response->assertJsonValidationErrors(['price']);
     }
-    public function test_store_update_destroy_force_destroy_without_token_product()
+    public function test_store_update_destroy_force_destroy_restore_trashed_index_without_token_product()
     {
         Category::factory(10)->create();
         $product = Product::factory()->create();
@@ -82,19 +79,27 @@ class ProductTest extends TestCase
             "category_id" => 7
         ];
         $response = $this
-            ->post(route('api.v1.products.store'), $data, self::HEADERS);
+            ->post(route('api.v1.products.store'), $data);
         $response->assertUnauthorized();
 
         $response = $this
-            ->put(route('api.v1.products.update', $product->id), $data, self::HEADERS);
+            ->put(route('api.v1.products.update', $product->id));
         $response->assertUnauthorized();
 
         $response = $this
-            ->delete(route('api.v1.products.destroy', $product->id), [], self::HEADERS);
+            ->delete(route('api.v1.products.destroy', $product->id));
         $response->assertUnauthorized();
 
         $response = $this
-            ->delete(route('api.v1.products.force-destroy', $product->id), [], self::HEADERS);
+            ->post(route('api.v1.products.restore', $product->id));
+        $response->assertUnauthorized();
+
+        $response = $this
+            ->get(route('api.v1.products.trashed.index', $product->id));
+        $response->assertUnauthorized();
+
+        $response = $this
+            ->delete(route('api.v1.products.force-destroy', $product->id));
         $response->assertUnauthorized();
     }
     public function test_update_one_field_of_product()
@@ -110,23 +115,84 @@ class ProductTest extends TestCase
             unset($errorFields[$index]);
             $response = $this
                 ->withToken($user->createToken('token')->plainTextToken)
-                ->put(route('api.v1.products.update', $product->id), [$field => 'updated ' . $field], self::HEADERS);
+                ->put(route('api.v1.products.update', $product->id), [$field => 'updated ' . $field]);
             $response->assertUnprocessable();
 
             $response->assertJsonValidationErrors($errorFields);
         }
     }
-    public function test_delete_product()
+    public function test_delete_and_restore_product()
     {
         $user = User::factory()->create();
         Category::factory(10)->create();
         $product = Product::factory()->create();
+        $id = $product->id;
+
+        $token = $user->createToken('token')->plainTextToken;
+        $response = $this
+            ->withToken($token)
+            ->delete(route('api.v1.products.destroy', $product->id));
+        $response->assertNoContent();
+        $product = Product::find($id);
+        $this->assertNull($product);
+        $product = Product::onlyTrashed()->find($id);
+        $this->assertNotNull($product);
 
         $response = $this
-            ->withToken($user->createToken('token')->plainTextToken)
-            ->delete(route('api.v1.products.destroy', $product->id), [], self::HEADERS);
-        $response->assertNoContent();
-        $product = Product::find($product->id);
+            ->withToken($token)
+            ->post(route('api.v1.products.restore', $id));
+
+        $response->assertOk();
+
+        $product = Product::onlyTrashed()->find($id);
         $this->assertNull($product);
+    }
+
+    public function test_force_destroy_product()
+    {
+        $user = User::factory()->create();
+        Category::factory(10)->create();
+        $product = Product::factory()->create();
+        $id = $product->id;
+
+        $token = $user->createToken('token')->plainTextToken;
+        $response = $this
+            ->withToken($token)
+            ->delete(route('api.v1.products.force-destroy', $product->id));
+        $response->assertNoContent();
+        $product = Product::find($id);
+        $this->assertNull($product);
+        $product = Product::onlyTrashed()->find($id);
+        $this->assertNull($product);
+
+        $response = $this
+            ->withToken($token)
+            ->post(route('api.v1.products.restore', $id));
+
+        $response->assertNotFound();
+    }
+
+    public function test_trashed_index_product()
+    {
+        $user = User::factory()->create();
+        Category::factory(10)->create();
+        $product = Product::factory()->create();
+        $id = $product->id;
+
+        $token = $user->createToken('token')->plainTextToken;
+        $response = $this
+            ->withToken($token)
+            ->delete(route('api.v1.products.force-destroy', $product->id));
+        $response->assertNoContent();
+        $product = Product::find($id);
+        $this->assertNull($product);
+        $product = Product::onlyTrashed()->find($id);
+        $this->assertNull($product);
+
+        $response = $this
+            ->withToken($token)
+            ->post(route('api.v1.products.restore', $id));
+
+        $response->assertNotFound();
     }
 }

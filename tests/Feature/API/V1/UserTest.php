@@ -42,8 +42,6 @@ class UserTest extends TestCase
         $response = $this->post(route('api.v1.auth.login'), [
             'email' => 'kkdioad',
             'password' => '',
-        ], [
-            'Accept' => 'application/json'
         ]);
         $response->assertUnprocessable();
     }
@@ -51,17 +49,13 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create();
         $response = $this
-            ->post(route('api.v1.auth.logout'), [], [
-                'Accept' => 'application/json'
-            ]);
+            ->post(route('api.v1.auth.logout'));
         $response->assertUnauthorized();
 
         $token = $user->createToken('token')->plainTextToken;
         $response = $this
             ->withToken($token)
-            ->post(route('api.v1.auth.logout'), [], [
-                'Accept' => 'application/json'
-            ]);
+            ->post(route('api.v1.auth.logout'));
         $response->assertNoContent();
 
     }
@@ -72,17 +66,13 @@ class UserTest extends TestCase
         $token = $user->createToken('token')->plainTextToken;
         $response = $this
             ->withToken($token)
-            ->post(route('api.v1.auth.logout'), [], [
-                'Accept' => 'application/json'
-            ]);
+            ->post(route('api.v1.auth.logout'));
         $response->assertNoContent();
         app('auth')->guard('sanctum')->forgetUser();
 
         $response = $this
             ->withToken($token)
-            ->post(route('api.v1.auth.logout'), [], [
-                'Accept' => 'application/json'
-            ]);
+            ->post(route('api.v1.auth.logout'));
         $response->assertUnauthorized();
     }
 }
