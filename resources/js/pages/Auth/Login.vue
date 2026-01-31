@@ -2,7 +2,7 @@
 import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {HttpStatus} from "http-status-ts";
-import {onMounted, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 
 import DefaultButton from "@/components/DefaultButton.vue";
 import DefaultInput from "@/components/DefaultInput.vue";
@@ -13,15 +13,6 @@ const errorMessage = ref(null);
 const credentials = reactive({
     email: '',
     password: '',
-})
-
-const middlewareGuest = () => {
-    if (token.value) {
-        router.visit(route('main'));
-    }
-}
-onMounted(() => {
-    middlewareGuest();
 })
 
 const login = () => {

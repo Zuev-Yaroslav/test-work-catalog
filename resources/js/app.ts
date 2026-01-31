@@ -14,10 +14,15 @@ import {ZiggyVue} from 'ziggy-js';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 router.on('navigate', () => {
+    const token = localStorage.getItem('auth_token');
     if (document.location.pathname.startsWith('/admin')) {
-        const token = localStorage.getItem('auth_token');
         if (!token) {
             router.visit(route('auth.login'));
+        }
+    }
+    if (document.location.pathname.startsWith('/auth')) {
+        if (token) {
+            router.visit(route('main'));
         }
     }
 })
