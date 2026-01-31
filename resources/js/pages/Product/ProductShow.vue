@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import {Link} from "@inertiajs/vue3"
 import {onMounted, ref} from "vue";
+
 import MainLayout from "@/layouts/MainLayout.vue";
-import api from "@/axios/api";
-import {Link, router} from "@inertiajs/vue3"
 import {getProduct} from "@/utils/product/productMethods";
 
 defineOptions({ layout: MainLayout });

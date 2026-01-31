@@ -1,7 +1,8 @@
-import api from "@/axios/api";
 import {router} from "@inertiajs/vue3";
-import {type Reactive, type Ref} from "vue";
 import {HttpStatus} from "http-status-ts";
+import {type Reactive, type Ref} from "vue";
+
+import api from "@/axios/api";
 
 const refreshProducts = (products: Ref, filterData: Reactive<object>) => {
     const routeName = filterData.only_trashed ? 'api.v1.products.trashed.index' : null;

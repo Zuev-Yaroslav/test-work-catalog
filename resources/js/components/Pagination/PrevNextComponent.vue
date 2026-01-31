@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/vue/24/solid";
 import {Link} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
+import {ref} from "vue";
 
-const props = defineProps({
+defineProps({
     isPrev: Boolean,
     isNext: Boolean,
     link: Object,

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import DefaultInput from "@/components/DefaultInput.vue";
-import {onBeforeMount, onMounted, reactive, ref} from "vue";
+import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {HttpStatus} from "http-status-ts";
-import {router} from "@inertiajs/vue3";
+import {onMounted, reactive, ref} from "vue";
+
 import DefaultButton from "@/components/DefaultButton.vue";
+import DefaultInput from "@/components/DefaultInput.vue";
 
 const errors = ref({});
 const token = ref(localStorage.getItem('auth_token'));
@@ -19,7 +20,7 @@ const middlewareGuest = () => {
         router.visit(route('main'));
     }
 }
-onBeforeMount(() => {
+onMounted(() => {
     middlewareGuest();
 })
 

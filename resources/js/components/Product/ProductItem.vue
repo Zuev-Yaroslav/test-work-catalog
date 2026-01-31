@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import {Link} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
 import { PencilSquareIcon, TrashIcon, XMarkIcon, ArrowUturnLeftIcon } from '@heroicons/vue/24/solid'
-import DefaultButton from "@/components/DefaultButton.vue";
+import {Link} from "@inertiajs/vue3";
 import Dialog from "primevue/dialog";
+import {computed, ref} from "vue";
+
+import DefaultButton from "@/components/DefaultButton.vue";
+
 
 const props = defineProps({
     product: Object,

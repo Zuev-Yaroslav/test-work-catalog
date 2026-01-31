@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageComponent from "@/components/Pagination/PageComponent.vue";
 
-const props = defineProps({
+defineProps({
     meta: Object,
     filterData: Object,
     routeName: String,
@@ -34,7 +34,8 @@ const props = defineProps({
                     <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
 
                     <PageComponent
-                        v-for="link in meta.links"
+                        v-for="(link, index) in meta.links"
+                        :key="index"
                         :link="link"
                         :meta="meta"
                         :filter-data="filterData"

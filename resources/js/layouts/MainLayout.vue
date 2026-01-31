@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {onMounted, ref, reactive, computed} from "vue";
 import {Link, router} from '@inertiajs/vue3'
+import {onMounted, ref} from "vue";
+
 import api from "@/axios/api";
 
 const user = ref(null)
@@ -14,14 +15,14 @@ const getUser = async () => {
     try {
         const response = await api.get(route('api.v1.auth.me'))
         user.value = response.data;
-    } catch (response) {
-
+    } catch (error) {
+        console.log(error);
     }
 
 }
 const logout = () => {
     api.post(route('api.v1.auth.logout'))
-        .then((response) => {
+        .then(() => {
             localStorage.removeItem('auth_token')
             user.value = null
             router.visit(route('main'));

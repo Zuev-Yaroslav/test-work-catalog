@@ -1,19 +1,20 @@
 <script setup lang="ts">
 
+import {usePage} from "@inertiajs/vue3";
+import {onMounted, reactive, ref, watch} from "vue";
+
+import DefaultButton from "@/components/DefaultButton.vue";
 import PaginationComponent from "@/components/Pagination/PaginationComponent.vue";
 import ProductFilterComponent from "@/components/Product/ProductFilterComponent.vue";
 import ProductItem from "@/components/Product/ProductItem.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
+import {getCategories} from "@/utils/product/categoryMethods";
 import {
     filter,
     destroyProduct,
     forceDestroyProduct,
     refreshProducts
 } from "@/utils/product/productMethods";
-import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
-import MainLayout from "@/layouts/MainLayout.vue";
-import {usePage} from "@inertiajs/vue3";
-import {getCategories} from "@/utils/product/categoryMethods";
-import DefaultButton from "@/components/DefaultButton.vue";
 
 const products = ref([]);
 const categories = ref([]);
@@ -32,7 +33,7 @@ onMounted(() => {
     getCategories(categories);
 })
 watch(() => usePage().url,
-    (newVal) => {
+    () => {
         refreshProducts(products, filterData)
     },
     { flush: 'post' }
@@ -59,6 +60,7 @@ defineOptions({ layout: MainLayout });
         <div>
             <ProductItem
                 v-for="product in products.data"
+                :key="product.id"
                 :product="product"
                 :is-admin="true"
                 @destroy-product="handleDestroyProduct(product.id)"

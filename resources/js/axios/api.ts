@@ -1,7 +1,6 @@
+import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {HttpStatus} from "http-status-ts";
-import Cookies from "js-cookie";
-import {router} from "@inertiajs/vue3";
 
 const api = axios.create();
 

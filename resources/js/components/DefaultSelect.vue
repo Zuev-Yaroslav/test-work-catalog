@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const props = defineProps({
+defineProps({
     items: Array,
     keyValue: String,
     keyName: String,

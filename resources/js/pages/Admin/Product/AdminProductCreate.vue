@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import {computed, onMounted, reactive, Ref, ref, watch} from "vue";
-import MainLayout from "@/layouts/MainLayout.vue";
-import api from "@/axios/api";
-import {Link, router} from "@inertiajs/vue3"
+import {Link} from "@inertiajs/vue3"
+import {computed, onMounted, reactive, ref} from "vue";
+
+import DefaultButton from "@/components/DefaultButton.vue";
 import DefaultInput from "@/components/DefaultInput.vue";
 import DefaultSelect from "@/components/DefaultSelect.vue";
-import {getProduct, storeProduct, updateProduct} from "@/utils/product/productMethods";
-import {getCategories} from "@/utils/product/categoryMethods";
 import DefaultTextarea from "@/components/DefaultTextarea.vue";
-import DefaultButton from "@/components/DefaultButton.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
+import {getCategories} from "@/utils/product/categoryMethods";
+import {storeProduct} from "@/utils/product/productMethods";
 
 defineOptions({ layout: MainLayout });
 const product = reactive({

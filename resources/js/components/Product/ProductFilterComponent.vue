@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
-import DefaultSelect from "@/components/DefaultSelect.vue";
-import DefaultInput from "@/components/DefaultInput.vue";
 import Checkbox from 'primevue/checkbox';
 
+import DefaultInput from "@/components/DefaultInput.vue";
+import DefaultSelect from "@/components/DefaultSelect.vue";
+
 const emits = defineEmits(['filter']);
-const props = defineProps({
+defineProps({
     categories: Array,
     isAdmin: Boolean,
 });

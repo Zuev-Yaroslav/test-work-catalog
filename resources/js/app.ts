@@ -1,13 +1,14 @@
 import '../css/app.css';
 
 import {createInertiaApp, router} from '@inertiajs/vue3';
+import Aura from '@primeuix/themes/aura';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-import type {DefineComponent} from 'vue';
-import {createApp, h} from 'vue';
-import {ZiggyVue} from 'ziggy-js';
 import PrimeVue from 'primevue/config';
 import Tooltip from 'primevue/tooltip';
-import Aura from '@primeuix/themes/aura';
+import type {DefineComponent} from 'vue';
+import {createApp, h} from 'vue';
+
+import {ZiggyVue} from 'ziggy-js';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';

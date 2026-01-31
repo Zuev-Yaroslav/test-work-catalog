@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
-import MainLayout from "@/layouts/MainLayout.vue";
-import PaginationComponent from "@/components/Pagination/PaginationComponent.vue";
 import {usePage} from "@inertiajs/vue3";
-import ProductItem from "@/components/Product/ProductItem.vue";
+import {onMounted, reactive, ref, watch} from "vue";
+
+import PaginationComponent from "@/components/Pagination/PaginationComponent.vue";
 import ProductFilterComponent from "@/components/Product/ProductFilterComponent.vue";
-import {filter, refreshProducts} from "@/utils/product/productMethods";
+import ProductItem from "@/components/Product/ProductItem.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 import {getCategories} from "@/utils/product/categoryMethods";
+import {filter, refreshProducts} from "@/utils/product/productMethods";
 
 const products = ref([]);
 const categories = ref([]);
@@ -40,6 +41,7 @@ defineOptions({ layout: MainLayout });
             <ProductItem
                 v-for="product in products.data"
                 :product="product"
+                :key="product.id"
             />
         </div>
 
