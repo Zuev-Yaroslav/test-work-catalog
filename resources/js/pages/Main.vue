@@ -21,7 +21,7 @@ onMounted(() => {
     getCategories(categories);
 })
 watch(() => usePage().url,
-    (newVal) => {
+    () => {
         refreshProducts(products, filterData);
     },
     { flush: 'post' }
@@ -35,7 +35,7 @@ defineOptions({ layout: MainLayout });
             <ProductFilterComponent
                 @filter="filter(filterData, $event)"
                 :categories="categories"
-                :filter-data="filterData"
+                v-model:filter-data="filterData"
             />
             <ProductItem
                 v-for="product in products.data"

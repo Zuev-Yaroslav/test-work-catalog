@@ -25,19 +25,19 @@ const getProduct = (product: Ref, id: number, errorObject) => {
 }
 const destroyProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.delete(route('api.v1.products.destroy', id))
-        .then((response) => {
+        .then(() => {
             refreshProducts(products, filerData);
         });
 }
 const restoreProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.post(route('api.v1.products.restore', id))
-        .then((response) => {
+        .then(() => {
             refreshProducts(products, filerData);
         });
 }
 const forceDestroyProduct = (id: number, products: Ref, filerData: Reactive<object>) => {
     api.delete(route('api.v1.products.force-destroy', id))
-        .then((response) => {
+        .then(() => {
             refreshProducts(products, filerData);
         });
 }
@@ -60,7 +60,7 @@ const updateProduct = (product: Ref, errorValidation: Ref) => {
 const storeProduct = (product: Reactive<object>, errorValidation: Ref) => {
     errorValidation.value = [];
     api.post(route('api.v1.products.store'), product)
-        .then((response) => {
+        .then(() => {
             router.visit(route('admin.products.index'));
         })
         .catch(error => {

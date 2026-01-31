@@ -7,9 +7,10 @@ import Checkbox from 'primevue/checkbox';
 const emits = defineEmits(['filter']);
 const props = defineProps({
     categories: Array,
-    filterData: Object,
     isAdmin: Boolean,
 });
+
+const filterData = defineModel('filterData');
 </script>
 
 <template>

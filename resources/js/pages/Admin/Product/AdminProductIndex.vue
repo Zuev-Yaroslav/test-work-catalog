@@ -46,7 +46,7 @@ defineOptions({ layout: MainLayout });
             class="border-b mb-5"
             @filter="filter(filterData, $event)"
             :categories="categories"
-            :filter-data="filterData"
+            v-model:filter-data="filterData"
             :is-admin="true"
         />
         <DefaultButton
