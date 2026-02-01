@@ -1,12 +1,11 @@
 <?php
 
-namespace API\V1;
+namespace Tests\Feature\Api\V1;
 
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
