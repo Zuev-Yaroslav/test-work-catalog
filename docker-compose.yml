@@ -21,17 +21,18 @@ services:
       - db
     ports:
       - "${VITE_PORT}:${VITE_PORT}"
-  supervisor:
+  scheduler:
     image: php-nodejs
+    restart: always
     build:
       context: .
       dockerfile: _docker/app/Dockerfile
-    command: [ "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]
+    command: "php artisan schedule:work"
     volumes:
       - ./:/var/www
     depends_on:
       - app
-    container_name: catalog_supervisor
+    container_name: catalog_scheduler
   db:
     image: postgres:18
     restart: always
